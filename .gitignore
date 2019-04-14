@@ -7,3 +7,6 @@ build
 # Exclude idea files
 .idea/
 *.iml
+
+# Excluding the configuration file
+foobar.config
