@@ -91,3 +91,4 @@ release {
 }
 
 createDockerfile.dependsOn bootJar
+afterReleaseBuild.dependsOn createDockerfile
