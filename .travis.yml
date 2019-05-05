@@ -6,6 +6,10 @@ services:
 
 before_install:
   - docker run -d -p 5000:5000 --restart=always --name registry registry:2
+  - ssh-add $GIT_KEY
+  - git config user.name "Travis"
+  - git config user.email "my007id@gmail.com"
+  - git config push.default simple
 
 jdk:
   - openjdk8
