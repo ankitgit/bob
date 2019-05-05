@@ -22,6 +22,3 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-ignore:
-  - *.md
-  - gradle.properties
