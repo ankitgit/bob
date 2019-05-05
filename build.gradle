@@ -37,7 +37,7 @@ docker {
     registryCredentials {
         url = 'https://cloud.docker.com/repository/docker/devnxt/bob'
         username = 'devnxt'
-        password = file('foobar.config').text
+        password = "$System.env.DOCKER_CRD"
         email = 'my007id@gmail.com'
     }
 }
