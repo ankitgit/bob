@@ -36,23 +36,46 @@ docker {
 
     registryCredentials {
         url = 'https://cloud.docker.com/repository/docker/devnxt/bob'
-        username = 'devnext'
+        username = 'devnxt'
         password = file('foobar.config').text
         email = 'my007id@gmail.com'
     }
 }
 
+task copyFiles(type: Copy) {
+    dependsOn bootJar
+    from(tasks.bootJar.outputs.files.singleFile)
+    into("build/docker")
+}
+
 task createDockerfile(type: Dockerfile) {
+    dependsOn copyFiles
+
     from('openjdk:jre-alpine')
-    copyFile('my-app-1.0.jar', '/app/my-app-1.0.jar')
+    copyFile('bob-' + version + '.jar', '/app/bob' + version + '.jar')
     entryPoint('java')
-    defaultCommand('-jar', '/app/my-app-1.0.jar')
+    defaultCommand('-jar', '/app/bob' + version + '.jar')
     exposePort(8080)
 }
 
-task buildDocker(type: DockerBuildImage) {
+task buildImage(type: DockerBuildImage) {
     dependsOn createDockerfile
-    tags.add('bmuschko/myimage:latest')
+
+    tags.add('devnxt/bob:' + project.version)
+}
+
+task pushImage(type: DockerPushImage) {
+    dependsOn buildImage
+
+    imageName = 'devnxt/bob'
+    tag = project.version
+}
+
+task deleteImage(type: DockerRemoveImage) {
+    shouldRunAfter pushImage
+
+    force = true
+    imageId = 'devnxt/bob:' + project.version
 }
 
 release {
@@ -90,5 +113,4 @@ release {
     }
 }
 
-createDockerfile.dependsOn bootJar
-afterReleaseBuild.dependsOn createDockerfile
+afterReleaseBuild.dependsOn pushImage
