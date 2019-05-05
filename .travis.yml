@@ -1,11 +1,6 @@
 language: java
 install: true
 
-addons:
-  apt:
-    packages:
-      - docker-ce
-
 services:
   - docker
 
